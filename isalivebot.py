@@ -12,16 +12,14 @@ import sys
 config = None
 servers = []
 
-if len(sys.argv) != 2:
-    print('You most pass a config file')
-    exit()
 
-if not os.path.exists(sys.argv[1]):
-    print('The config file most exist')
-    exit()
 
 def load_config():
-    path = sys.argv[1]
+    path = sys.argv[1] if len(sys.argv) > 1 else 'config.yml'
+
+    if not os.path.exists(path):
+        print('The config file most exist')
+        exit()
     global config
     config = {}
     with open(path) as stream:

@@ -1,0 +1,13 @@
+version: "2.2"
+
+services:
+
+  isalivebot:
+    build:
+      context: .
+    image: isalivebot
+    container_name: isalivebot
+    volumes:
+      - ./config:/config
+
+    command: "python isalivebot.py /config/config.yml"
