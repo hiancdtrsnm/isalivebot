@@ -4,16 +4,29 @@ from aiogram import Bot, Dispatcher, executor, types
 import asyncio
 import json
 from datetime import datetime
-from fire import Fire
 from utils import check_status
-
+import yaml
+import os
+import sys
 
 config = None
 servers = []
 
+if len(sys.argv) != 2:
+    print('You most pass a config file')
+    exit()
+
+if not os.path.exists(sys.argv[1]):
+    print('The config file most exist')
+    exit()
+
 def load_config():
+    path = sys.argv[1]
     global config
-    config = json.load(open('config.json'))
+    config = {}
+    with open(path) as stream:
+        config = yaml.safe_load(stream)
+
     for server in config['servers']:
         server['last_status'] = None
         server['last_update'] = None
@@ -96,10 +109,10 @@ async def periodic_update(loop):
     await asyncio.sleep(10)
     loop.create_task(periodic_update(loop))
 
-def main(file: str='config.json'):
+def main():
     loop = asyncio.get_event_loop()
     loop.create_task(periodic_update(loop))
     executor.start_polling(dp, loop=loop, skip_updates=True)
 
 if __name__ == '__main__':
-    Fire(main)
+    main()

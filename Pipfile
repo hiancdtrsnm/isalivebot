@@ -10,6 +10,7 @@ autopep8 = "*"
 [packages]
 aiogram = "*"
 fire = "*"
+yaml = "*"
 
 [requires]
 python_version = "3.8"

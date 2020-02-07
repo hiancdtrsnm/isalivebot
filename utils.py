@@ -3,7 +3,7 @@ import asyncio
 from asyncio import Future
 import time
 
-async def check_status(host: str, port: int, timeout=5):
+def check_status(host: str, port: int, timeout=5):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(timeout)
