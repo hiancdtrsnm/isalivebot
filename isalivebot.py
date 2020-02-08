@@ -79,10 +79,7 @@ async def send_welcome(message: types.Message):
 async def send_status(message: types.Message):
 
     update = update_info()
-    data = """
-    El estado de los servidores es:
-    """ + '\n'.join([f"{server['name']}: {server['last_status']}\nUpdated on {server['last_update']}\n" for server in servers])
-
+    data = generate_message(servers, "El estado de los servidores es:")
 
     await message.reply(data)
 
@@ -92,20 +89,36 @@ async def periodic_update(loop):
     changes = update_info()
 
     if changes:
-        data = """
-        El estado de los servidores cambió:
+        data = generate_message(changes)
 
-        """ + '\n'.join([f"{server['name']}: {server['last_status']}\nUpdated on {server['last_update']}\n" for server in changes])
-        me = 475495684
-        group = -353481672
-        await bot.send_message(me, data)
-        await bot.send_message(group, data)
+
+        messages = []
+        for id in config['notify_ids']:
+            messge.append(bot.send_message(id, data))
+
+        await asyncio.gather(*messages)
         logger.info(data)
 
 
 
-    await asyncio.sleep(10)
+    await asyncio.sleep(config['time_lapse'])
     loop.create_task(periodic_update(loop))
+
+
+def generate_message(servers, header='El estado de los servidores cambió:'):
+    """
+    🖥
+    """
+    emoji_dict = {'dead': '☠️', 'alive':'❤️'}
+    text = header + '\n\n'
+
+    for server in servers:
+        text += f"🖥  {server['name']}  🖥: {emoji_dict[server['last_status']]} {server['last_status']} {emoji_dict[server['last_status']]}\nUpdated on {server['last_update']}\n\n"
+
+    return text
+
+
+
 
 def main():
     loop = asyncio.get_event_loop()

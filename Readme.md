@@ -18,6 +18,12 @@ servers:
 
 token: "123456789:ABCDEFGHI_JKLMNOPQRSTUVWXY-Zabc-def"
 
+notify_ids: [111111111, 2222222222]
+
 time_lapse: 30
 
 ```
+
+# Docker
+
+Isalivebot support using `Docker` and `docker-compose`.
